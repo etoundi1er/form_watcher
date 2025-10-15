@@ -11,8 +11,9 @@ class FormWatcher {
      * @example
      * const tracker = new FormWatcher('#myForm', {
      *     excludeSelectors: ['#password', '.ignore-me'],
-     *     onFormChanged: (hasChanges, changes) => {
+     *     onFormChanged: (hasChanges, changes, event) => {
      *         console.log('Form changed:', hasChanges, changes);
+     *         console.log('Triggered by:', event?.target);
      *     }
      * });
      */
@@ -36,6 +37,7 @@ class FormWatcher {
         this.originalState = new Map()
         this.currentState = new Map()
         this.removedFields = new Map() // Tracks removed fields by id
+        this.lastEvent = null // Store the last event that triggered a change
 
         // Debounced checkForChanges
         this.debouncedCheckForChanges = this.debounce(() => this.checkForChanges(), this.DEBOUNCE_DELAY)
@@ -109,6 +111,7 @@ class FormWatcher {
         // Listen for change events (e.g., select, checkbox, radio)
         this.form.addEventListener('change', (e) => {
             if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) && !this.isExcluded(e.target)) {
+                this.lastEvent = e // Store the event
                 // if radio, update all in the same name group
                 if (e.target.type === 'radio' && e.target.name) {
                     const group = this.form.querySelectorAll(`input[type="radio"][name="${e.target.name}"]`)
@@ -123,6 +126,7 @@ class FormWatcher {
         this.form.addEventListener('input', (e) => {
             const target = e.target
             if (!this.isExcluded(target) && (target.tagName === 'TEXTAREA' || (target.tagName === 'INPUT' && target.type === 'text'))) {
+                this.lastEvent = e // Store the event
                 this.updateCurrentState(target)
             }
         })
@@ -218,7 +222,7 @@ class FormWatcher {
 
         // Invoke callback if provided
         if (this.onFormChanged) {
-            this.onFormChanged(hasChanges, this.getChanges())
+            this.onFormChanged(hasChanges, this.getChanges(), this.lastEvent)
         }
 
         return hasChanges

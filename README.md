@@ -24,17 +24,17 @@ FormWatcher provides a simple yet powerful way to track form state changes in yo
 - ✅ **Lightweight** - Minimal footprint for optimal performance
 
 ## Installation
-
+Hey
 Install via npm:
 
 ```bash
-npm install form-watcher
+npm install @etoundi1er/form-watcher
 ```
 
 Or using yarn:
 
 ```bash
-yarn add form-watcher
+yarn add @etoundi1er/form-watcher
 ```
 
 ## How to Use
@@ -42,7 +42,7 @@ yarn add form-watcher
 ### Basic Usage
 
 ```javascript
-import FormWatcher from 'form-watcher';
+import FormWatcher from '@etoundi1er/form-watcher';
 
 // Initialize with a CSS selector
 const watcher = new FormWatcher('#myForm');
@@ -62,10 +62,11 @@ console.log('Changes:', changes);
 const watcher = new FormWatcher('#myForm', {
     debounceDelay: 500, // Wait 500ms after last change before checking
     excludeSelectors: ['#password', '.ignore-field', '[data-no-track]'], // Exclude specific fields
-    onFormChanged: (hasChanges, changes) => {
+    onFormChanged: (hasChanges, changes, event) => {
         // Callback invoked whenever form changes are detected
         console.log('Form changed:', hasChanges);
         console.log('Details:', changes);
+        console.log('Triggered by:', event?.target);
 
         // Enable/disable save button based on changes
         document.getElementById('saveBtn').disabled = !hasChanges;
@@ -78,11 +79,12 @@ const watcher = new FormWatcher('#myForm', {
 ```javascript
 const formElement = document.querySelector('#myForm');
 const watcher = new FormWatcher(formElement, {
-    onFormChanged: (hasChanges, changes) => {
+    onFormChanged: (hasChanges, changes, event) => {
         if (hasChanges) {
             console.log('Modified fields:', changes.modified.length);
             console.log('Added fields:', changes.added.length);
             console.log('Removed fields:', changes.removed.length);
+            console.log('Changed field:', event?.target?.name);
         }
     }
 });
@@ -106,6 +108,40 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     watcher.resetState(); // Mark current state as "original"
 });
 ```
+
+### Accessing the Triggering Event
+
+The `onFormChanged` callback receives the event that triggered the change, allowing you to access detailed information about what caused the update:
+
+```javascript
+const watcher = new FormWatcher('#myForm', {
+    onFormChanged: (hasChanges, changes, event) => {
+        if (event) {
+            // Access the field that triggered the change
+            const field = event.target;
+            console.log('Field name:', field.name);
+            console.log('Field type:', field.type);
+            console.log('New value:', field.value);
+
+            // Show a toast notification
+            if (hasChanges) {
+                showToast(`Field "${field.name}" was modified`);
+            }
+        } else {
+            // Event is null when changes are detected programmatically
+            // (e.g., via MutationObserver or resetState)
+            console.log('Changes detected programmatically');
+        }
+    }
+});
+```
+
+**Note:** The `event` parameter may be `null` when changes are detected through non-user interactions, such as:
+- Fields dynamically added/removed via the MutationObserver
+- Programmatic calls to `resetState()`
+- Initial state setup
+
+Always use optional chaining (`event?.target`) when accessing the event object.
 
 ### Working with Dynamic Forms
 
@@ -143,7 +179,10 @@ new FormWatcher(formElementOrSelector, options)
   - `debounceDelay` (number) - Debounce delay in milliseconds (default: 300)
   - `excludeSelectors` (Array<string>) - Array of CSS selectors for fields to exclude from tracking (default: [])
   - `onFormChanged` (Function) - Callback function invoked when changes are detected (default: null)
-    - Parameters: `(hasChanges: boolean, changes: Object)`
+    - Parameters: `(hasChanges: boolean, changes: Object, event: Event | null)`
+    - `hasChanges` - Whether the form has changes compared to its original state
+    - `changes` - Object containing detailed information about added, removed, modified, and re-added fields
+    - `event` - The DOM event that triggered the change (may be `null` for programmatic changes)
 
 ### Methods
 
