@@ -1,5 +1,5 @@
 {
-  "name": "form-watcher",
+  "name": "@etoundi1er/form-watcher",
   "version": "1.0.0",
   "description": "FormWatcher class to monitor changes in a form. It tracks added, removed, and modified fields, and can handle dynamic changes",
   "keywords": [
@@ -24,5 +24,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
