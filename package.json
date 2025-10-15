@@ -1,0 +1,28 @@
+{
+  "name": "form-watcher",
+  "version": "1.0.0",
+  "description": "FormWatcher class to monitor changes in a form. It tracks added, removed, and modified fields, and can handle dynamic changes",
+  "keywords": [
+    "form",
+    "dom",
+    "browser",
+    "event",
+    "changes",
+    "tracking"
+  ],
+  "homepage": "https://github.com/etoundi1er/form_watcher#readme",
+  "bugs": {
+    "url": "https://github.com/etoundi1er/form_watcher/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/etoundi1er/form_watcher.git"
+  },
+  "license": "MIT",
+  "author": "Frank Etoundi <frank.etoundi@gmail.com> (https://www.etoundi.com/)",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
