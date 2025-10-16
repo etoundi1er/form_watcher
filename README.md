@@ -2,6 +2,8 @@
 
 A lightweight JavaScript library to monitor and track changes in HTML forms. FormWatcher intelligently detects added, removed, and modified form fields, with support for dynamic form changes and real-time updates.
 
+[See Demo](https://etoundi1er.github.io/form_watcher/demo.html)
+
 ## Overview
 
 FormWatcher provides a simple yet powerful way to track form state changes in your web applications. It's perfect for:
