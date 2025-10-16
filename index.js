@@ -60,9 +60,9 @@ class FormWatcher {
         }
     }
 
-    // Get field ID, checking data-form-tracking-id first, then id
+    // Get field ID, checking data-form-watcher-id first, then id
     getFieldId(field) {
-        return field.dataset.formTrackingId || field.id || ''
+        return field.dataset.formWatcherId || field.id || ''
     }
 
     // Initialize original and current state
@@ -88,7 +88,7 @@ class FormWatcher {
         if (!id) {
             // Generate ID using name + unique ID or just unique ID
             id = field.name ? `${field.name}-${crypto.randomUUID()}` : `${field.type}-${crypto.randomUUID()}`
-            field.dataset.formTrackingId = id // Store in data attribute
+            field.dataset.formWatcherId = id // Store in data attribute
         }
 
         return id

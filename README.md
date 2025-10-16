@@ -23,6 +23,25 @@ FormWatcher provides a simple yet powerful way to track form state changes in yo
 - ✅ **Zero dependencies** - Pure JavaScript with no external dependencies
 - ✅ **Lightweight** - Minimal footprint for optimal performance
 
+### How It Works
+
+FormWatcher automatically tracks form fields by assigning unique identifiers to each field. If a field doesn't have an `id` attribute, FormWatcher will add a `data-form-watcher-id` attribute to the field's DOM element. This allows FormWatcher to:
+
+- Track fields even if they don't have an `id` attribute
+- Maintain field identity even when the field is dynamically removed and re-added to the DOM
+- Provide consistent tracking across page lifecycle
+
+**Example of automatic ID assignment:**
+```html
+<!-- Before FormWatcher initialization -->
+<input type="text" name="username" value="john">
+
+<!-- After FormWatcher initialization -->
+<input type="text" name="username" value="john" data-form-watcher-id="username-550e8400-e29b-41d4-a716-446655440000">
+```
+
+You can also manually set `data-form-watcher-id` on fields if you want to control their identifiers.
+
 ## Installation
 
 Install via npm:
@@ -73,6 +92,12 @@ const watcher = new FormWatcher('#myForm', {
     }
 });
 ```
+
+**Note:** You can use any CSS selector in `excludeSelectors`, including:
+- ID selectors: `#password`
+- Class selectors: `.ignore-field`
+- Attribute selectors: `[data-no-track]`, `[data-form-watcher-id="specific-id"]`
+- Type selectors: `input[type="hidden"]`
 
 ### Using DOM Element
 
