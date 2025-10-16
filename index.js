@@ -82,17 +82,12 @@ class FormWatcher {
         return this.excludeSelectors.some((selector) => field.matches(selector) || this.getFieldId(field) === selector.replace(/^#/, ''))
     }
 
-    // Generate unique ID
-    generateUniqueId() {
-        return 'field-' + Math.random().toString(36).substr(2, 9)
-    }
-
     getOrSetFieldID(field) {
         let id = this.getFieldId(field)
 
         if (!id) {
             // Generate ID using name + unique ID or just unique ID
-            id = field.name ? `${field.name}-${this.generateUniqueId()}` : this.generateUniqueId()
+            id = field.name ? `${field.name}-${crypto.randomUUID()}` : `${field.type}-${crypto.randomUUID()}`
             field.dataset.formTrackingId = id // Store in data attribute
         }
 
@@ -100,17 +95,17 @@ class FormWatcher {
     }
 
     formatFieldState(field) {
-        let checked
-        if (field.type === 'checkbox' || field.type === 'radio') checked = field.checked
+        const checked = (field.type === 'checkbox' || field.type === 'radio') ? field.checked : undefined
+        const value = field.value || ''
 
-        return { value: field.value || '', checked: checked }
+        return { field, value, checked }
     }
 
     // Setup event listeners
     setupEventListeners() {
         // Listen for change events (e.g., select, checkbox, radio)
         this.form.addEventListener('change', (e) => {
-            if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) && !this.isExcluded(e.target)) {
+            if (['input', 'select', 'textarea'].includes(e.target.tagName.toLowerCase()) && !this.isExcluded(e.target)) {
                 this.lastEvent = e // Store the event
                 // if radio, update all in the same name group
                 if (e.target.type === 'radio' && e.target.name) {
@@ -125,7 +120,7 @@ class FormWatcher {
         // Listen for input events (e.g., text input, textarea)
         this.form.addEventListener('input', (e) => {
             const target = e.target
-            if (!this.isExcluded(target) && (target.tagName === 'TEXTAREA' || (target.tagName === 'INPUT' && target.type === 'text'))) {
+            if (!this.isExcluded(target) && (target.tagName.toLowerCase() === 'textarea' || (target.tagName.toLowerCase() === 'input' && target.type === 'text'))) {
                 this.lastEvent = e // Store the event
                 this.updateCurrentState(target)
             }
@@ -243,7 +238,7 @@ class FormWatcher {
             added: [],
             removed: [],
             modified: [],
-            reAdded: [] // Fields that were removed and added back
+            reAdded: [] // Fields that were removed from the form and added back
         }
 
         // Find added, re-added, and modified

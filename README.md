@@ -24,7 +24,7 @@ FormWatcher provides a simple yet powerful way to track form state changes in yo
 - ✅ **Lightweight** - Minimal footprint for optimal performance
 
 ## Installation
-Hey
+
 Install via npm:
 
 ```bash
@@ -214,6 +214,18 @@ const changes = watcher.getChanges();
 
 changes.modified.forEach(field => {
     console.log(`Field ${field.id} changed from "${field.original.value}" to "${field.current.value}"`);
+
+    // Access the DOM element directly
+    if (field.element) {
+        field.element.classList.add('modified');
+    }
+});
+
+// Highlight all added fields
+changes.added.forEach(field => {
+    if (field.element) {
+        field.element.style.border = '2px solid green';
+    }
 });
 ```
 
@@ -232,6 +244,7 @@ watcher.resetState(); // Current state becomes the new baseline
 ```javascript
 {
     id: 'field-id',
+    element: HTMLElement, // The DOM node reference
     original: { value: 'old value', checked: false },
     current: { value: 'new value', checked: true }
 }
@@ -241,6 +254,7 @@ watcher.resetState(); // Current state becomes the new baseline
 ```javascript
 {
     id: 'field-id',
+    element: HTMLElement, // The DOM node reference
     value: 'current value',
     checked: true // for checkboxes/radios
 }
@@ -250,6 +264,7 @@ watcher.resetState(); // Current state becomes the new baseline
 ```javascript
 {
     id: 'field-id',
+    element: HTMLElement, // The DOM node reference (if still accessible)
     value: 'last known value',
     checked: false // for checkboxes/radios
 }
@@ -259,6 +274,7 @@ watcher.resetState(); // Current state becomes the new baseline
 ```javascript
 {
     id: 'field-id',
+    element: HTMLElement, // The DOM node reference
     value: 'current value',
     checked: true,
     previousValue: 'value before removal',
