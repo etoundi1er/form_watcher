@@ -10,6 +10,7 @@ const path = require('path');
 
 const sourceFile = path.join(__dirname, 'index.js');
 const outputFile = path.join(__dirname, 'form-watcher.browser.js');
+const packageJson = require('./package.json');
 
 // Read the source file
 const sourceCode = fs.readFileSync(sourceFile, 'utf8');
@@ -22,7 +23,7 @@ const umdWrapper = `/**
  * FormWatcher - Browser version (UMD)
  * Tracks form changes and provides detailed change information
  *
- * @version 1.0.0
+ * @version ${packageJson.version}
  * @author Frank Etoundi
  * @license MIT
  *
