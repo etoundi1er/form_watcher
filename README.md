@@ -4,6 +4,9 @@ A lightweight JavaScript library to monitor and track changes in HTML forms. For
 
 [See Demo](https://etoundi1er.github.io/form_watcher/demo.html)
 
+[![npm version](https://img.shields.io/npm/v/@etoundi1er/form-watcher.svg?style=flat)](https://www.npmjs.com/package/@etoundi1er/form-watcher)
+[![npm downloads](https://img.shields.io/npm/dm/@etoundi1er/form-watcher.svg?style=flat)](https://www.npmjs.com/package/@etoundi1er/form-watcher)
+
 ## Overview
 
 FormWatcher provides a simple yet powerful way to track form state changes in your web applications. It's perfect for:

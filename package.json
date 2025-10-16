@@ -1,6 +1,6 @@
 {
   "name": "@etoundi1er/form-watcher",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "FormWatcher class to monitor changes in a form. It tracks added, removed, and modified fields, and can handle dynamic changes",
   "keywords": [
     "form",

@@ -65,6 +65,15 @@ class FormWatcher {
         return field.dataset.formWatcherId || field.id || ''
     }
 
+    // Compare values (handles arrays for multi-select)
+    valuesAreEqual(value1, value2) {
+        if (Array.isArray(value1) && Array.isArray(value2)) {
+            if (value1.length !== value2.length) return false
+            return value1.every((val, index) => val === value2[index])
+        }
+        return value1 === value2
+    }
+
     // Initialize original and current state
     initializeState() {
         const fields = this.form.querySelectorAll('input, select, textarea')
@@ -96,7 +105,15 @@ class FormWatcher {
 
     formatFieldState(field) {
         const checked = (field.type === 'checkbox' || field.type === 'radio') ? field.checked : undefined
-        const value = field.value || ''
+
+        // Handle multi-select fields
+        let value
+        if (field.tagName.toLowerCase() === 'select' && field.multiple) {
+            // For multi-select, get all selected values as an array
+            value = Array.from(field.selectedOptions).map(option => option.value)
+        } else {
+            value = field.value || ''
+        }
 
         return { field, value, checked }
     }
@@ -189,7 +206,7 @@ class FormWatcher {
                 if (this.removedFields.has(id)) {
                     const removedData = this.removedFields.get(id)
                     // Re-added field: compare with removed value
-                    if (removedData.value !== data.value || removedData.checked !== data.checked) {
+                    if (!this.valuesAreEqual(removedData.value, data.value) || removedData.checked !== data.checked) {
                         hasChanges = true // Value differs from removed state
                         break
                     }
@@ -198,7 +215,7 @@ class FormWatcher {
                     hasChanges = true
                     break
                 }
-            } else if (originalData.value !== data.value || originalData.checked !== data.checked) {
+            } else if (!this.valuesAreEqual(originalData.value, data.value) || originalData.checked !== data.checked) {
                 // Existing field with changed value
                 hasChanges = true
                 break
@@ -257,7 +274,7 @@ class FormWatcher {
                 } else {
                     changes.added.push(change)
                 }
-            } else if (originalData.value !== data.value || originalData.checked !== data.checked) {
+            } else if (!this.valuesAreEqual(originalData.value, data.value) || originalData.checked !== data.checked) {
                 changes.modified.push({
                     id,
                     original: originalData,
