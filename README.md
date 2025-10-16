@@ -56,9 +56,30 @@ Or using yarn:
 yarn add @etoundi1er/form-watcher
 ```
 
+### Browser (without build tools)
+
+If you're not using a bundler, you can use the browser-compatible UMD build:
+
+```html
+<!-- Load from local file -->
+<script src="./form-watcher.browser.js"></script>
+
+<!-- Or from CDN (when published) -->
+<script src="https://unpkg.com/@etoundi1er/form-watcher/form-watcher.browser.js"></script>
+
+<script>
+  // FormWatcher is now available as a global variable
+  const watcher = new FormWatcher('#myForm', {
+    onFormChanged: (hasChanges, changes, event) => {
+      console.log('Form changed:', hasChanges);
+    }
+  });
+</script>
+```
+
 ## How to Use
 
-### Basic Usage
+### Basic Usage (ES6 Modules)
 
 ```javascript
 import FormWatcher from '@etoundi1er/form-watcher';
@@ -331,6 +352,22 @@ FormWatcher uses modern JavaScript features and browser APIs. It is compatible w
 For older browser support, you may need to include polyfills for:
 - `Map` - [core-js](https://github.com/zloirock/core-js)
 - `MutationObserver` - [mutation-observer](https://www.npmjs.com/package/mutation-observer)
+
+## Building from Source
+
+The browser-compatible version (`form-watcher.browser.js`) is compiled from `index.js`:
+
+```bash
+# Install dependencies (if any)
+npm install
+
+# Build browser version
+npm run build:browser
+```
+
+This generates a UMD build that works in browsers, AMD, and CommonJS environments.
+
+**Note:** The browser build is automatically generated before publishing to npm via the `prebuild` script.
 
 ## License
 
